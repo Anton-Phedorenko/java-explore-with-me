@@ -13,7 +13,7 @@
 #spring.datasource.username=${POSTGRES_USER:postgres}
 #spring.datasource.password=${POSTGRES_PASSWORD:iamroot}
 server:
-  port: 9090
+  port: 8080
 stats-server:
   url: http://localhost:9090
 spring:
