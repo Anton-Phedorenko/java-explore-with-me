@@ -1,7 +1,7 @@
 package ru.practicum.exceptions.exception;
 
-public class ObjectExistenceException extends RuntimeException {
-    public ObjectExistenceException(final String message) {
+public class NotFoundException extends RuntimeException {
+    public NotFoundException(final String message) {
         super(message);
     }
 

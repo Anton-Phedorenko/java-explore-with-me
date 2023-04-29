@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.exceptions.exception.*;
@@ -19,6 +20,7 @@ import java.util.Objects;
 
 @Slf4j
 @RestControllerAdvice
+@ControllerAdvice
 public class HandlerException {
 
     @ExceptionHandler
@@ -36,8 +38,8 @@ public class HandlerException {
         return responseEntity;
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> exc(ValidationException ex) {
+    @ExceptionHandler(value = {ValidationException.class, MissingServletRequestParameterException.class})
+    public ResponseEntity<ErrorResponse> exc(RuntimeException ex) {
         ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
                 new ErrorResponse(HttpStatus.BAD_REQUEST,
                         "Incorrectly made request.",
@@ -48,20 +50,20 @@ public class HandlerException {
         return responseEntity;
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> exc(MissingServletRequestParameterException ex) {
-        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
-                new ErrorResponse(HttpStatus.BAD_REQUEST,
-                        "Incorrectly made request.",
-                        ex.getMessage(),
-                        LocalDateTime.now().withNano(0)),
-                HttpStatus.BAD_REQUEST);
-        log.info(String.valueOf(responseEntity));
-        return responseEntity;
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(MissingServletRequestParameterException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.BAD_REQUEST,
+//                        "Incorrectly made request.",
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.BAD_REQUEST);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> exc(ObjectExistenceException ex) {
+    public ResponseEntity<ErrorResponse> exc(NotFoundException ex) {
         ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
                 new ErrorResponse(HttpStatus.NOT_FOUND,
                         ex.getReason(),

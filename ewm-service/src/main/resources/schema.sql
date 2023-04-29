@@ -1,79 +1,79 @@
-drop table if exists users cascade;
-drop table if exists categories cascade;
-drop table if exists compilations cascade;
-drop table if exists location cascade;
-drop table if exists events cascade;
-drop table if exists compilations_events cascade;
-drop table if exists requests cascade;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS compilations CASCADE;
+DROP TABLE IF EXISTS location CASCADE;
+DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS compilations_events CASCADE;
+DROP TABLE IF EXISTS requests CASCADE;
 
-create table if not exists users
+CREATE TABLE IF NOT EXISTS users
 (
-    id bigint generated always as identity primary key,
-    email varchar(100),
-    name varchar(100),
-    constraint uq_email unique (email)
+    id    BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    email VARCHAR(100),
+    name  VARCHAR(100),
+    CONSTRAINT uq_email UNIQUE (email)
 );
 
-create table if not exists categories
+CREATE TABLE IF NOT EXISTS categories
 (
-    id bigint generated always as identity primary key,
-    name varchar(100),
-    constraint uq_name unique (name)
+    id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(100),
+    CONSTRAINT uq_name UNIQUE (name)
 );
 
-create table if not exists compilations
+CREATE TABLE IF NOT EXISTS compilations
 (
-    id bigint generated always as identity primary key,
-    title varchar(120),
-    pinned boolean,
-    constraint uq_title unique (title)
+    id     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title  VARCHAR(120),
+    pinned BOOLEAN,
+    CONSTRAINT uq_title UNIQUE (title)
 );
 
-create table if not exists location
+CREATE TABLE IF NOT EXISTS location
 (
-    lat float,
-    lon float,
-    primary key (lat, lon)
+    lat FLOAT,
+    lon FLOAT,
+    PRIMARY KEY (lat, lon)
 );
 
-create table if not exists events
+CREATE TABLE IF NOT EXISTS events
 (
-    id bigint generated always as identity primary key,
-    id_user bigint,
-    id_category bigint,
-    lat float,
-    lon float,
-    annotation varchar(2000),
-    title varchar(120),
-    description varchar(7000),
-    created_on timestamp,
-    event_date timestamp,
-    participant_limit int,
-    paid boolean,
-    request_moderation boolean,
-    state varchar(20),
-    published_on timestamp,
-    constraint fk_events_to_users foreign key (id_user) references users (id),
-    constraint fk_events_to_category foreign key (id_category) references categories (id),
-    constraint fk_events_to_location foreign key (lat, lon) references location (lat, lon)
+    id                 BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_user            BIGINT,
+    id_category        BIGINT,
+    lat                FLOAT,
+    lon                FLOAT,
+    annotation         VARCHAR(2000),
+    title              VARCHAR(120),
+    description        VARCHAR(7000),
+    created_on         TIMESTAMP,
+    event_date         TIMESTAMP,
+    participant_limit  INT,
+    paid               BOOLEAN,
+    request_moderation BOOLEAN,
+    state              VARCHAR(20),
+    published_on       TIMESTAMP,
+    CONSTRAINT fk_events_to_users FOREIGN KEY (id_user) REFERENCES users (id),
+    CONSTRAINT fk_events_to_category FOREIGN KEY (id_category) REFERENCES categories (id),
+    CONSTRAINT fk_events_to_location FOREIGN KEY (lat, lon) REFERENCES location (lat, lon)
 );
 
-create table if not exists compilations_events
+CREATE TABLE IF NOT EXISTS compilations_events
 (
-    id bigint generated always as identity primary key,
-    id_event bigint,
-    id_compilation bigint,
-    constraint fk_to_compilation foreign key (id_compilation) references compilations (id),
-    constraint fk_to_events foreign key (id_event) references events (id)
+    id             BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_event       BIGINT,
+    id_compilation BIGINT,
+    CONSTRAINT fk_to_compilation FOREIGN KEY (id_compilation) REFERENCES compilations (id),
+    CONSTRAINT fk_to_events FOREIGN KEY (id_event) REFERENCES events (id)
 );
 
-create table if not exists requests
+CREATE TABLE IF NOT EXISTS requests
 (
-    id bigint generated always as identity primary key,
-    id_user bigint,
-    id_event bigint,
-    status varchar(20),
-    created timestamp,
-    constraint fk_requests_to_users foreign key (id_user) references users (id),
-    constraint fk_requests_to_events foreign key (id_event) references events (id)
+    id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    id_user  BIGINT,
+    id_event BIGINT,
+    status   VARCHAR(20),
+    created  TIMESTAMP,
+    CONSTRAINT fk_requests_to_users FOREIGN KEY (id_user) REFERENCES users (id),
+    CONSTRAINT fk_requests_to_events FOREIGN KEY (id_event) REFERENCES events (id)
 );

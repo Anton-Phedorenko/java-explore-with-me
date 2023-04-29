@@ -1,10 +1,10 @@
-drop table if exists stats cascade;
+DROP TABLE IF EXISTS stats CASCADE;
 
-create table if not exists stats
+CREATE TABLE IF NOT EXISTS stats
 (
-    id bigint generated always as identity primary key,
-    app varchar(100),
-    uri varchar(100),
-    ip varchar(100),
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    app        VARCHAR(100),
+    uri        VARCHAR(400),
+    ip         VARCHAR(100),
     time_stamp TIMESTAMP
 );

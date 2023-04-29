@@ -17,11 +17,10 @@ public class LocationServiceImpl implements LocationService {
 
     @Transactional
     @Override
-    public LocationDto create(LocationDto locationDto) {
+    public void create(LocationDto locationDto) {
         if (locationRepository.getByLatAndLon(locationDto.getLat(), locationDto.getLon()) == null) {
-            return LocationMapper.toLocationDto(locationRepository
+            LocationMapper.toLocationDto(locationRepository
                     .saveAndFlush(LocationMapper.toLocation(locationDto)));
         }
-        return locationDto;
     }
 }

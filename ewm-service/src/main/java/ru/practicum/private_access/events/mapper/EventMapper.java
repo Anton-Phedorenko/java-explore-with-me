@@ -22,14 +22,15 @@ public class EventMapper {
 
     public static Event toEvent(EventDtoInput eventDtoInput, User user, Category category) {
         Event event = new Event();
-        event.setAnnotation(eventDtoInput.getAnnotation());
-        event.setTitle(eventDtoInput.getTitle());
-        event.setDescription(eventDtoInput.getDescription());
-        event.setCreatedOn(LocalDateTime.now());
-        event.setEventDate(eventDtoInput.getEventDate());
-        event.setParticipantLimit(eventDtoInput.getParticipantLimit());
-        event.setPaid(eventDtoInput.getPaid());
-        event.setRequestModeration(eventDtoInput.getRequestModeration());
+        setParamToEvent(eventDtoInput,event);
+//        event.setAnnotation(eventDtoInput.getAnnotation());
+//        event.setTitle(eventDtoInput.getTitle());
+//        event.setDescription(eventDtoInput.getDescription());
+//        event.setCreatedOn(LocalDateTime.now());
+//        event.setEventDate(eventDtoInput.getEventDate());
+//        event.setParticipantLimit(eventDtoInput.getParticipantLimit());
+//        event.setPaid(eventDtoInput.getPaid());
+//        event.setRequestModeration(eventDtoInput.getRequestModeration());
         if (eventDtoInput.getLocation() != null) {
             event.setLocation(LocationMapper.toLocation(eventDtoInput.getLocation()));
         }
@@ -43,14 +44,15 @@ public class EventMapper {
 
     public static Event toEvent(EventDtoInputUpdate eventDtoInput, User user, Category category) {
         Event event = new Event();
-        event.setAnnotation(eventDtoInput.getAnnotation());
-        event.setDescription(eventDtoInput.getDescription());
-        event.setTitle(eventDtoInput.getTitle());
-        event.setCreatedOn(LocalDateTime.now());
-        event.setParticipantLimit(eventDtoInput.getParticipantLimit());
-        event.setEventDate(eventDtoInput.getEventDate());
-        event.setPaid(eventDtoInput.getPaid());
-        event.setRequestModeration(eventDtoInput.getRequestModeration());
+        setParamToEvent(eventDtoInput,event);
+//        event.setAnnotation(eventDtoInput.getAnnotation());
+//        event.setDescription(eventDtoInput.getDescription());
+//        event.setTitle(eventDtoInput.getTitle());
+//        event.setCreatedOn(LocalDateTime.now());
+//        event.setParticipantLimit(eventDtoInput.getParticipantLimit());
+//        event.setEventDate(eventDtoInput.getEventDate());
+//        event.setPaid(eventDtoInput.getPaid());
+//        event.setRequestModeration(eventDtoInput.getRequestModeration());
         event.setUser(user);
         if (category != null) {
             event.setCategory(category);
@@ -155,5 +157,15 @@ public class EventMapper {
                 .confirmedRequests(0)
                 .views(0L)
                 .build();
+    }
+    public static void setParamToEvent(EventDtoInput eventInput,Event event){
+        event.setAnnotation(eventInput.getAnnotation());
+        event.setTitle(eventInput.getTitle());
+        event.setDescription(eventInput.getDescription());
+        event.setCreatedOn(LocalDateTime.now());
+        event.setEventDate(eventInput.getEventDate());
+        event.setParticipantLimit(eventInput.getParticipantLimit());
+        event.setPaid(eventInput.getPaid());
+        event.setRequestModeration(eventInput.getRequestModeration());
     }
 }

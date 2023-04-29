@@ -13,7 +13,7 @@ import ru.practicum.admin_access.compilations.mapper.CompilationMapper;
 import ru.practicum.admin_access.compilations.model.Compilation;
 import ru.practicum.admin_access.compilations.repository.CompilationRepository;
 import ru.practicum.admin_access.compilations.service.dal.CompilationService;
-import ru.practicum.exceptions.exception.ObjectExistenceException;
+import ru.practicum.exceptions.exception.NotFoundException;
 import ru.practicum.private_access.events.dto.EventShortDtoOutput;
 import ru.practicum.private_access.events.model.Event;
 import ru.practicum.private_access.events.repository.EventRepository;
@@ -61,7 +61,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDtoOutput update(Long id, CompilationDtoInput compilationDtoInput) {
         Compilation oldCompilation = compilationRepository.findById(id)
-                .orElseThrow(() -> new ObjectExistenceException(String
+                .orElseThrow(() -> new NotFoundException(String
                         .format("Compilation with id=%s was not found", id)));
         Compilation compilation = updateCompilation(oldCompilation,
                 CompilationMapper.toCompilation(compilationDtoInput));
@@ -109,7 +109,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDtoOutput getById(Long id) {
         Compilation compilation = compilationRepository.findById(id)
-                .orElseThrow(() -> new ObjectExistenceException(String
+                .orElseThrow(() -> new NotFoundException(String
                         .format("Compilation with id=%s was not found", id)));
         return appendEventToCompilation(CompilationMapper.toCompilationDtoOutput(compilation),
                 compilationEventRepository.getByCompilation(id)

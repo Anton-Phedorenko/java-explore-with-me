@@ -16,5 +16,4 @@ public interface CategoryService {
 
     List<CategoryDto> getByParam(Integer from, Integer size);
 
-    List<Category> getAll();
 }

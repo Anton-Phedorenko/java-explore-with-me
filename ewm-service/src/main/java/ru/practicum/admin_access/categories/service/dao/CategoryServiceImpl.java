@@ -10,10 +10,11 @@ import ru.practicum.admin_access.categories.model.Category;
 import ru.practicum.admin_access.categories.repository.CategoryRepository;
 import ru.practicum.admin_access.categories.service.dal.CategoryService;
 import ru.practicum.exceptions.exception.ConstraintForeignKeyException;
-import ru.practicum.exceptions.exception.ObjectExistenceException;
+import ru.practicum.exceptions.exception.NotFoundException;
 import ru.practicum.private_access.events.repository.EventRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,34 +35,32 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto update(Long id, CategoryDto newCategoryDto) {
         Category category = getById(id);
         category.setName(newCategoryDto.getName());
+
         return CategoryMapper.toCategoryDto(category);
     }
 
     @Transactional
     @Override
     public void delete(Long id) {
-        if (!eventRepository.existsByCategory(getById(id))) {
-            categoryRepository.deleteById(id);
-        } else {
+        if (eventRepository.existsByCategory(getById(id))) {
             throw new ConstraintForeignKeyException("The category is not empty");
         }
+
+        categoryRepository.deleteById(id);
     }
 
     @Override
     public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new ObjectExistenceException(String
+                .orElseThrow(() -> new NotFoundException(String
                         .format("Category with id=%s was not found", id)));
     }
 
     @Override
     public List<CategoryDto> getByParam(Integer from, Integer size) {
-        return CategoryMapper.toCategoryDtoList(categoryRepository.findAll(PageRequest.of(from > 0 ? from / size : 0,
-                size)).toList());
-    }
-
-    @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+        return categoryRepository.findAll(PageRequest.of(from > 0 ? from / size : 0, size))
+                .map(CategoryMapper::toCategoryDto)
+                .stream().collect(Collectors.toList());
     }
 }
+

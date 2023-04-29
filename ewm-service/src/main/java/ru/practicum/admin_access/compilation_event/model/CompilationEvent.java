@@ -16,9 +16,11 @@ public class CompilationEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "id_compilation", nullable = false)
     private Compilation compilation;
+
     @ManyToOne
     @JoinColumn(name = "id_event", nullable = false)
     private Event event;
