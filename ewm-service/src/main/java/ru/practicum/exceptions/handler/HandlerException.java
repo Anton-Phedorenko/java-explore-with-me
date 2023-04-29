@@ -50,18 +50,6 @@ public class HandlerException {
         return responseEntity;
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<ErrorResponse> exc(MissingServletRequestParameterException ex) {
-//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
-//                new ErrorResponse(HttpStatus.BAD_REQUEST,
-//                        "Incorrectly made request.",
-//                        ex.getMessage(),
-//                        LocalDateTime.now().withNano(0)),
-//                HttpStatus.BAD_REQUEST);
-//        log.info(String.valueOf(responseEntity));
-//        return responseEntity;
-//    }
-
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> exc(NotFoundException ex) {
         ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(

@@ -63,7 +63,7 @@ public class RequestServiceImpl implements RequestService {
                 request.setCreated(LocalDateTime.now().withNano(0));
                 return RequestMapper.toRequestDto(repository.save(request));
             } else {
-                throw new AccessException(String.format("All seats for the event with id=%s are occupied.", eventId));
+                throw new AccessException("All seats are occupied for the event with id=" + eventId);
             }
         } else {
             throw new AccessException("Event is not published");
