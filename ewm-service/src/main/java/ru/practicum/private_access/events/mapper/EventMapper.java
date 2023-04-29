@@ -22,7 +22,7 @@ public class EventMapper {
 
     public static Event toEvent(EventDtoInput eventDtoInput, User user, Category category) {
         Event event = new Event();
-        setParamToEvent(eventDtoInput,event);
+        setParamToEvent(eventDtoInput, event);
 //        event.setAnnotation(eventDtoInput.getAnnotation());
 //        event.setTitle(eventDtoInput.getTitle());
 //        event.setDescription(eventDtoInput.getDescription());
@@ -44,7 +44,7 @@ public class EventMapper {
 
     public static Event toEvent(EventDtoInputUpdate eventDtoInput, User user, Category category) {
         Event event = new Event();
-        setParamToEvent(eventDtoInput,event);
+        setParamToEvent(eventDtoInput, event);
 //        event.setAnnotation(eventDtoInput.getAnnotation());
 //        event.setDescription(eventDtoInput.getDescription());
 //        event.setTitle(eventDtoInput.getTitle());
@@ -158,7 +158,8 @@ public class EventMapper {
                 .views(0L)
                 .build();
     }
-    public static void setParamToEvent(EventDtoInput eventInput,Event event){
+
+    public static void setParamToEvent(EventDtoInput eventInput, Event event) {
         event.setAnnotation(eventInput.getAnnotation());
         event.setTitle(eventInput.getTitle());
         event.setDescription(eventInput.getDescription());

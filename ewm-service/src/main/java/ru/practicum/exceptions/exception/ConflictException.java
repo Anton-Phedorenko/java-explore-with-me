@@ -1,10 +1,11 @@
 package ru.practicum.exceptions.exception;
 
 public class ConflictException extends RuntimeException {
-    public ConflictException (final String message){
+    public ConflictException(final String message) {
         super(message);
     }
-    public String getReason(){
+
+    public String getReason() {
         return "conflict";
     }
 }
