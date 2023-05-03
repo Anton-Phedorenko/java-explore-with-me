@@ -74,6 +74,7 @@ public class RequestServiceImpl implements RequestService {
 
         return RequestMapper.toRequestDto(repository.save(request));
     }
+
     @Transactional
     @Override
     public RequestDtoOutput cancel(Long userId, Long requestId) {
