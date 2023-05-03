@@ -36,6 +36,18 @@ public class HandlerException {
         return responseEntity;
     }
 
+//    @ExceptionHandler(value = {ValidationException.class, MissingServletRequestParameterException.class})
+//    public ResponseEntity<ErrorResponse> exc(RuntimeException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.BAD_REQUEST,
+//                        "Incorrectly made request.",
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.BAD_REQUEST);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> exc(NotFoundException ex) {
         ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
@@ -47,6 +59,78 @@ public class HandlerException {
         log.info(String.valueOf(responseEntity));
         return responseEntity;
     }
+
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(InvalidRequestException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.CONFLICT,
+//                        ex.getReason(),
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.CONFLICT);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
+
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(DuplicateException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.CONFLICT,
+//                        ex.getReason(),
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.CONFLICT);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(TimeException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.CONFLICT,
+//                        ex.getReason(),
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.CONFLICT);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(StatusException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.CONFLICT,
+//                        ex.getReason(),
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.CONFLICT);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(ConstraintForeignKeyException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.CONFLICT,
+//                        ex.getReason(),
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.CONFLICT);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity<ErrorResponse> exc(AccessException ex) {
+//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
+//                new ErrorResponse(HttpStatus.CONFLICT,
+//                        ex.getReason(),
+//                        ex.getMessage(),
+//                        LocalDateTime.now().withNano(0)),
+//                HttpStatus.CONFLICT);
+//        log.info(String.valueOf(responseEntity));
+//        return responseEntity;
+//    }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> exc(ConstraintViolationException ex) {

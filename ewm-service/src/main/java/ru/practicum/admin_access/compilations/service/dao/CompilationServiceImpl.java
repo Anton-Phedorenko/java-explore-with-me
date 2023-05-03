@@ -41,6 +41,22 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDtoOutput create(CompilationDtoInput compilationDtoInput) {
+//        Compilation compilation = compilationRepository
+//                .save(CompilationMapper.toCompilation(compilationDtoInput));
+//        CompilationDtoOutput compilationDtoOutput = CompilationMapper.toCompilationDtoOutput(compilation);
+//        if (compilationDtoInput.getEvents() != null && !compilationDtoInput.getEvents().isEmpty()) {
+//            List<Event> events = eventRepository.findAllById(compilationDtoInput.getEvents());
+//            CompilationEvent compilationEvent = new CompilationEvent();
+//            List<CompilationEvent> compilationEventList = new ArrayList<>();
+//            compilationEvent.setCompilation(compilation);
+//            for (Event event : events) {
+//                compilationEvent.setEvent(event);
+//                compilationEventList.add(compilationEvent);
+//            }
+//            compilationEventRepository.saveAll(compilationEventList);
+//            return appendEventToCompilation(compilationDtoOutput, events);
+//        }
+//        return appendEventToCompilation(compilationDtoOutput, List.of());
         List<Event> events;
         if (compilationDtoInput.getEvents() == null || compilationDtoInput.getEvents().isEmpty()) {
             events = new ArrayList<>();
@@ -56,27 +72,61 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Transactional
     @Override
-    public CompilationDtoOutput update(Long id, CompilationDtoInput compilationDtoInput) {
-        Compilation compilation = compilationRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException("Not found compilation by id: " + id));
+    public CompilationDtoOutput update(Long id,CompilationDtoInput compilationDtoInput) {
+//        Compilation oldCompilation = compilationRepository.findById(id)
+//                .orElseThrow(() -> new NotFoundException(String
+//                        .format("Compilation with id=%s was not found", id)));
+//        Compilation compilation = updateCompilation(oldCompilation,
+//                CompilationMapper.toCompilation(compilationDtoInput));
+//        CompilationDtoOutput compilationDtoOutput = CompilationMapper.toCompilationDtoOutput(compilation);
+//        if (!compilationDtoInput.getEvents().isEmpty()) {
+//            List<CompilationEvent> oldCompilationEvent = compilationEventRepository.getByCompilation(id);
+//            List<Event> newEvents = eventRepository.findAllById(compilationDtoInput.getEvents());
+//            CompilationEvent compilationEventNew = new CompilationEvent();
+//            List<CompilationEvent> compilationEventList = new ArrayList<>();
+//            compilationEventNew.setCompilation(compilation);
+//            if (!oldCompilationEvent.isEmpty()) {
+//                for (CompilationEvent compilationEvent : oldCompilationEvent) {
+//                    compilationEventRepository.deleteByCompilationAndEvent(compilationEvent
+//                            .getCompilation().getId(), compilationEvent.getEvent().getId());
+//                }
+//                for (Event event : newEvents) {
+//                    compilationEventNew.setEvent(event);
+//                    compilationEventList.add(compilationEventNew);
+//                }
+//                compilationEventRepository.saveAll(compilationEventList);
+//            } else {
+//                for (Event event : newEvents) {
+//                    compilationEventNew.setEvent(event);
+//                    compilationEventList.add(compilationEventNew);
+//                }
+//                compilationEventRepository.saveAll(compilationEventList);
+//            }
+//            appendEventToCompilation(compilationDtoOutput, newEvents);
+//        }
+//        return compilationDtoOutput;
 
-        if (compilationDtoInput.getTitle() != null && !compilationDtoInput.getTitle().isBlank()) {
-            compilation.setTitle(compilationDtoInput.getTitle());
+
+            Compilation compilation = compilationRepository
+                    .findById(id)
+                    .orElseThrow(() -> new NotFoundException("Not found compilation by id: " + id));
+
+            if (compilationDtoInput.getTitle() != null && !compilationDtoInput.getTitle().isBlank()) {
+                compilation.setTitle(compilationDtoInput.getTitle());
+            }
+            if (compilationDtoInput.getPinned() != null) {
+                compilation.setPinned(compilationDtoInput.getPinned());
+            }
+
+            if (compilationDtoInput.getEvents() != null && !compilationDtoInput.getEvents().isEmpty()) {
+                List<Event> events = eventRepository.findAllById(compilationDtoInput.getEvents());
+                compilation.setEvents(new ArrayList<>(events));
+            }
+
+            compilationRepository.save(compilation);
+
+            return toCompilationDtoOutput(compilation);
         }
-        if (compilationDtoInput.getPinned() != null) {
-            compilation.setPinned(compilationDtoInput.getPinned());
-        }
-
-        if (compilationDtoInput.getEvents() != null && !compilationDtoInput.getEvents().isEmpty()) {
-            List<Event> events = eventRepository.findAllById(compilationDtoInput.getEvents());
-            compilation.setEvents(new ArrayList<>(events));
-        }
-
-        compilationRepository.save(compilation);
-
-        return toCompilationDtoOutput(compilation);
-    }
 
 
     @Transactional

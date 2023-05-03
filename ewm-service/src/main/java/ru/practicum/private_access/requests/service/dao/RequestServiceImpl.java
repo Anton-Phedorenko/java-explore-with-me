@@ -14,6 +14,7 @@ import ru.practicum.exceptions.exception.InvalidRequestException;
 import ru.practicum.exceptions.exception.StatusException;
 import ru.practicum.private_access.events.model.Event;
 import ru.practicum.private_access.events.service.dal.EventService;
+import ru.practicum.private_access.events.state.State;
 import ru.practicum.private_access.requests.Status.Status;
 import ru.practicum.private_access.requests.dto.RequestDtoOutput;
 import ru.practicum.private_access.requests.dto.RequestsForStatusDtoInput;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.time.LocalTime.now;
 import static ru.practicum.private_access.events.state.State.PUBLISHED;
 import static ru.practicum.private_access.requests.Status.Status.PENDING;
 
@@ -74,7 +76,6 @@ public class RequestServiceImpl implements RequestService {
 
         return RequestMapper.toRequestDto(repository.save(request));
     }
-
     @Transactional
     @Override
     public RequestDtoOutput cancel(Long userId, Long requestId) {
