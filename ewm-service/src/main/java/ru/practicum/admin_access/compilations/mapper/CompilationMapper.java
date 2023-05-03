@@ -5,13 +5,10 @@ import lombok.NoArgsConstructor;
 import ru.practicum.admin_access.compilations.dto.CompilationDtoInput;
 import ru.practicum.admin_access.compilations.dto.CompilationDtoOutput;
 import ru.practicum.admin_access.compilations.model.Compilation;
-import ru.practicum.private_access.events.mapper.EventMapper;
 import ru.practicum.private_access.events.model.Event;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompilationMapper {
