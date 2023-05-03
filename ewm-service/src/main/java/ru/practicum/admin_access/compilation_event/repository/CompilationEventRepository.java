@@ -13,9 +13,6 @@ public interface CompilationEventRepository extends JpaRepository<CompilationEve
     @Query("SELECT ce FROM CompilationEvent ce WHERE ce.compilation.id = :compilationId")
     List<CompilationEvent> getByCompilation(Long compilationId);
 
-    @Query("DELETE FROM CompilationEvent ce WHERE ce.compilation.id = :compilationId AND ce.event.id = :eventId")
-    void deleteByCompilationAndEvent(Long compilationId, Long eventId);
-
     @Query("SELECT ce FROM CompilationEvent ce WHERE ce.compilation.pinned = :pinned ")
     List<CompilationEvent> getAllByCompilationPinned(Boolean pinned, Pageable pageable);
 }

@@ -25,6 +25,8 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static ru.practicum.admin_access.compilations.mapper.CompilationMapper.toCompilationDtoOutput;
+import static ru.practicum.admin_access.compilations.mapper.CompilationMapper.toNewCompilation;
 
 @Service
 @RequiredArgsConstructor
@@ -39,70 +41,101 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDtoOutput create(CompilationDtoInput compilationDtoInput) {
-        Compilation compilation = compilationRepository
-                .save(CompilationMapper.toCompilation(compilationDtoInput));
-        CompilationDtoOutput compilationDtoOutput = CompilationMapper.toCompilationDtoOutput(compilation);
-        if (compilationDtoInput.getEvents() != null && !compilationDtoInput.getEvents().isEmpty()) {
-            List<Event> events = eventRepository.findAllById(compilationDtoInput.getEvents());
-            CompilationEvent compilationEvent = new CompilationEvent();
-            List<CompilationEvent> compilationEventList = new ArrayList<>();
-            compilationEvent.setCompilation(compilation);
-            for (Event event : events) {
-                compilationEvent.setEvent(event);
-                compilationEventList.add(compilationEvent);
-            }
-            compilationEventRepository.saveAll(compilationEventList);
-            return appendEventToCompilation(compilationDtoOutput, events);
+//        Compilation compilation = compilationRepository
+//                .save(CompilationMapper.toCompilation(compilationDtoInput));
+//        CompilationDtoOutput compilationDtoOutput = CompilationMapper.toCompilationDtoOutput(compilation);
+//        if (compilationDtoInput.getEvents() != null && !compilationDtoInput.getEvents().isEmpty()) {
+//            List<Event> events = eventRepository.findAllById(compilationDtoInput.getEvents());
+//            CompilationEvent compilationEvent = new CompilationEvent();
+//            List<CompilationEvent> compilationEventList = new ArrayList<>();
+//            compilationEvent.setCompilation(compilation);
+//            for (Event event : events) {
+//                compilationEvent.setEvent(event);
+//                compilationEventList.add(compilationEvent);
+//            }
+//            compilationEventRepository.saveAll(compilationEventList);
+//            return appendEventToCompilation(compilationDtoOutput, events);
+//        }
+//        return appendEventToCompilation(compilationDtoOutput, List.of());
+        List<Event> events;
+        if (compilationDtoInput.getEvents() == null || compilationDtoInput.getEvents().isEmpty()) {
+            events = new ArrayList<>();
+        } else {
+            events = eventRepository.findAllById(compilationDtoInput.getEvents());
         }
-        return appendEventToCompilation(compilationDtoOutput, List.of());
-    }
 
-    @Transactional
-    @Override
-    public CompilationDtoOutput update(Long id, CompilationDtoInput compilationDtoInput) {
-        Compilation oldCompilation = compilationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String
-                        .format("Compilation with id=%s was not found", id)));
-        Compilation compilation = updateCompilation(oldCompilation,
-                CompilationMapper.toCompilation(compilationDtoInput));
-        CompilationDtoOutput compilationDtoOutput = CompilationMapper.toCompilationDtoOutput(compilation);
-        if (!compilationDtoInput.getEvents().isEmpty()) {
-            List<CompilationEvent> oldCompilationEvent = compilationEventRepository.getByCompilation(id);
-            List<Event> newEvents = eventRepository.findAllById(compilationDtoInput.getEvents());
-            CompilationEvent compilationEventNew = new CompilationEvent();
-            List<CompilationEvent> compilationEventList = new ArrayList<>();
-            compilationEventNew.setCompilation(compilation);
-            if (!oldCompilationEvent.isEmpty()) {
-                for (CompilationEvent compilationEvent : oldCompilationEvent) {
-                    compilationEventRepository.deleteByCompilationAndEvent(compilationEvent
-                            .getCompilation().getId(), compilationEvent.getEvent().getId());
-                }
-                for (Event event : newEvents) {
-                    compilationEventNew.setEvent(event);
-                    compilationEventList.add(compilationEventNew);
-                }
-                compilationEventRepository.saveAll(compilationEventList);
-            } else {
-                for (Event event : newEvents) {
-                    compilationEventNew.setEvent(event);
-                    compilationEventList.add(compilationEventNew);
-                }
-                compilationEventRepository.saveAll(compilationEventList);
-            }
-            appendEventToCompilation(compilationDtoOutput, newEvents);
-        }
+        Compilation comp = compilationRepository.save(toNewCompilation(compilationDtoInput, events));
+        CompilationDtoOutput compilationDtoOutput = toCompilationDtoOutput(comp);
+        compilationDtoOutput.setEvents(eventService.getEventShortDtoOutput(events));
         return compilationDtoOutput;
     }
 
     @Transactional
     @Override
-    public void delete(Long id) {
-        getById(id);
-        List<CompilationEvent> oldCompilationEvent = compilationEventRepository.getByCompilation(id);
-        for (CompilationEvent compilationEvent : oldCompilationEvent) {
-            compilationEventRepository.deleteByCompilationAndEvent(compilationEvent
-                    .getCompilation().getId(), compilationEvent.getEvent().getId());
+    public CompilationDtoOutput update(Long id,CompilationDtoInput compilationDtoInput) {
+//        Compilation oldCompilation = compilationRepository.findById(id)
+//                .orElseThrow(() -> new NotFoundException(String
+//                        .format("Compilation with id=%s was not found", id)));
+//        Compilation compilation = updateCompilation(oldCompilation,
+//                CompilationMapper.toCompilation(compilationDtoInput));
+//        CompilationDtoOutput compilationDtoOutput = CompilationMapper.toCompilationDtoOutput(compilation);
+//        if (!compilationDtoInput.getEvents().isEmpty()) {
+//            List<CompilationEvent> oldCompilationEvent = compilationEventRepository.getByCompilation(id);
+//            List<Event> newEvents = eventRepository.findAllById(compilationDtoInput.getEvents());
+//            CompilationEvent compilationEventNew = new CompilationEvent();
+//            List<CompilationEvent> compilationEventList = new ArrayList<>();
+//            compilationEventNew.setCompilation(compilation);
+//            if (!oldCompilationEvent.isEmpty()) {
+//                for (CompilationEvent compilationEvent : oldCompilationEvent) {
+//                    compilationEventRepository.deleteByCompilationAndEvent(compilationEvent
+//                            .getCompilation().getId(), compilationEvent.getEvent().getId());
+//                }
+//                for (Event event : newEvents) {
+//                    compilationEventNew.setEvent(event);
+//                    compilationEventList.add(compilationEventNew);
+//                }
+//                compilationEventRepository.saveAll(compilationEventList);
+//            } else {
+//                for (Event event : newEvents) {
+//                    compilationEventNew.setEvent(event);
+//                    compilationEventList.add(compilationEventNew);
+//                }
+//                compilationEventRepository.saveAll(compilationEventList);
+//            }
+//            appendEventToCompilation(compilationDtoOutput, newEvents);
+//        }
+//        return compilationDtoOutput;
+
+
+            Compilation compilation = compilationRepository
+                    .findById(id)
+                    .orElseThrow(() -> new NotFoundException("Not found compilation by id: " + id));
+
+            if (compilationDtoInput.getTitle() != null && !compilationDtoInput.getTitle().isBlank()) {
+                compilation.setTitle(compilationDtoInput.getTitle());
+            }
+            if (compilationDtoInput.getPinned() != null) {
+                compilation.setPinned(compilationDtoInput.getPinned());
+            }
+
+            if (compilationDtoInput.getEvents() != null && !compilationDtoInput.getEvents().isEmpty()) {
+                List<Event> events = eventRepository.findAllById(compilationDtoInput.getEvents());
+                compilation.setEvents(new ArrayList<>(events));
+            }
+
+            compilationRepository.save(compilation);
+
+            return toCompilationDtoOutput(compilation);
         }
+
+
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        if (!compilationRepository.existsById(id)) {
+            throw new NotFoundException("Not found comp by id: " + id);
+        }
+
         compilationRepository.deleteById(id);
     }
 

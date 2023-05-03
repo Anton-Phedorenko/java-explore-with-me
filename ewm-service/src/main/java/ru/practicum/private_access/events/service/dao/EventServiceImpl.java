@@ -264,6 +264,7 @@ public class EventServiceImpl implements EventService {
                                     .toEventShortDtoOutput(event),
                             Objects.requireNonNullElse(confirmedRequests.get(event), 0L)),
                     Objects.requireNonNullElse(views.get(String.format("/events/%s", event.getId())), 0L)));
+
         }
         return eventShortDtoOutputList;
     }

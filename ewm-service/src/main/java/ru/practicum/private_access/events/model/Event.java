@@ -40,7 +40,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "id_category", nullable = false)
     Category category;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumns({
             @JoinColumn(name = "lat"),
             @JoinColumn(name = "lon")

@@ -7,6 +7,7 @@ import ru.practicum.private_access.events.model.Event;
 import ru.practicum.private_access.requests.model.Request;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long>, RequestDao {
@@ -35,6 +36,6 @@ public interface RequestRepository extends JpaRepository<Request, Long>, Request
     List<Request> getRemainingRequest(Long userId, Long eventId, List<Long> ids);
 
     @Query("select r from Request r where r.event.id = :eventId and r.user.id = :userId")
-    Request getByEventIdAndUserId(Long eventId, Long userId);
+    Optional<Request> getByEventIdAndUserId(Long eventId, Long userId);
 
 }

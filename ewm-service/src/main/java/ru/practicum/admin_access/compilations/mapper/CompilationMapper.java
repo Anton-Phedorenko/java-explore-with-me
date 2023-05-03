@@ -5,6 +5,13 @@ import lombok.NoArgsConstructor;
 import ru.practicum.admin_access.compilations.dto.CompilationDtoInput;
 import ru.practicum.admin_access.compilations.dto.CompilationDtoOutput;
 import ru.practicum.admin_access.compilations.model.Compilation;
+import ru.practicum.private_access.events.mapper.EventMapper;
+import ru.practicum.private_access.events.model.Event;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CompilationMapper {
@@ -23,5 +30,14 @@ public class CompilationMapper {
                 .title(compilation.getTitle())
                 .pinned(compilation.getPinned())
                 .build();
+    }
+
+    public static Compilation toNewCompilation(CompilationDtoInput dto, Collection<Event> events) {
+        Compilation compilation = new Compilation();
+        compilation.setTitle(dto.getTitle());
+        compilation.setPinned(dto.getPinned());
+        compilation.setEvents(new ArrayList<>(events));
+
+        return compilation;
     }
 }
