@@ -142,6 +142,7 @@ public class EventMapper {
                 .views(0L)
                 .build();
     }
+
     public static EventDtoOutputForAdmin toEventDtoOutputForAdmin(Event event) {
         String eventDate = null;
         String createdOn = null;

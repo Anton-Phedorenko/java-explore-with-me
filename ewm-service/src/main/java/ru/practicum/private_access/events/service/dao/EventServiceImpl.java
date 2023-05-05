@@ -49,16 +49,22 @@ import static java.util.stream.Collectors.groupingBy;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EventServiceImpl implements EventService {
 
+    public static final String APP = "ewm-main-service";
+
     EventRepository repository;
+
     UserService userService;
+
     CategoryService categoryService;
+
     RequestRepository requestRepository;
+
     LocationService locationService;
+
     StatsClient client;
+
     @PersistenceContext
     EntityManager entityManager;
-
-    public static final String APP = "ewm-main-service";
 
     @Transactional
     @Override
@@ -157,8 +163,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventDtoOutputForAdmin> getAllByParamForAdmin(List<Long> users, List<String> states,
-                                                      List<Long> categories, LocalDateTime rangeStart,
-                                                      LocalDateTime rangeEnd, Integer from, Integer size) {
+                                                              List<Long> categories, LocalDateTime rangeStart,
+                                                              LocalDateTime rangeEnd, Integer from, Integer size) {
         JPAQuery<Event> query = new JPAQuery<>(entityManager);
         QEvent qEvent = QEvent.event;
         List<Event> events = query.from(qEvent)
@@ -372,6 +378,7 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(groupingBy(Request::getEvent, counting()));
     }
+
     private Map<Event, Long> getCountCommentsForEvent(List<Event> events, JPAQuery<Comment> query) {
         return query.from(QComment.comment)
                 .where(QComment.comment.event.in(events))
@@ -439,5 +446,4 @@ public class EventServiceImpl implements EventService {
         eventDtoOutput.setViews(views);
         return eventDtoOutput;
     }
-
 }
