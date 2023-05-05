@@ -6,6 +6,9 @@ import ru.practicum.admin_access.categories.dto.CategoryDto;
 import ru.practicum.admin_access.users.dto.UserShortDto;
 import ru.practicum.private_access.events.location.dto.LocationDto;
 import ru.practicum.private_access.events.state.State;
+import ru.practicum.public_access.comments.dto.CommentDtoOutput;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,4 +33,5 @@ public class EventDtoOutput {
     Integer confirmedRequests;
     State state;
     Long views;
+    List<CommentDtoOutput> comments;
 }
