@@ -23,7 +23,7 @@ public class CommentMapper {
         return CommentDtoOutput
                 .builder()
                 .id(comment.getId())
-                .creator(UserMapper.toUserShortDto(comment.getAuthor()))
+                .creator(UserMapper.toUserShortDto(comment.getUser()))
                 .description(comment.getDescription())
                 .build();
     }
