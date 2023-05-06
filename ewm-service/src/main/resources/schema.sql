@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS requests
     CONSTRAINT fk_requests_to_events FOREIGN KEY (id_event) REFERENCES events (id)
 );
 
-create table if not exists comments
+CREATE TABLE if NOT EXISTS comments
 (
     id bigint generated always AS IDENTITY PRIMARY KEY,
     id_user bigint,

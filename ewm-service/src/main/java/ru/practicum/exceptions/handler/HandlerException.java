@@ -72,20 +72,6 @@ public class HandlerException {
         return responseEntity;
     }
 
-//    @ExceptionHandler(value = {StatusException.class, ConstraintForeignKeyException.class, AccessException.class,
-//            TimeException.class, DuplicateException.class, InvalidRequestException.class,
-//            HttpMessageNotReadableException.class})
-//    public ResponseEntity<ErrorResponse> totalConflictExc(RuntimeException ex) {
-//        ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
-//                new ErrorResponse(HttpStatus.CONFLICT,
-//                        "Integrity constraint has been violated.",
-//                        ex.getMessage(),
-//                        LocalDateTime.now().withNano(0)),
-//                HttpStatus.CONFLICT);
-//        log.info(String.valueOf(responseEntity));
-//        return responseEntity;
-//    }
-
     @ExceptionHandler(value = {ConflictException.class,
             HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponse> totalConflictExc(RuntimeException ex) {
@@ -98,5 +84,4 @@ public class HandlerException {
         log.info(String.valueOf(responseEntity));
         return responseEntity;
     }
-
 }
