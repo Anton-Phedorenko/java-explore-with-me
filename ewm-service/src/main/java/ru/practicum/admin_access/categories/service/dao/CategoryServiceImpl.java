@@ -9,7 +9,7 @@ import ru.practicum.admin_access.categories.mapper.CategoryMapper;
 import ru.practicum.admin_access.categories.model.Category;
 import ru.practicum.admin_access.categories.repository.CategoryRepository;
 import ru.practicum.admin_access.categories.service.dal.CategoryService;
-import ru.practicum.exceptions.exception.ConstraintForeignKeyException;
+import ru.practicum.exceptions.exception.ConflictException;
 import ru.practicum.exceptions.exception.NotFoundException;
 import ru.practicum.private_access.events.repository.EventRepository;
 
@@ -43,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Long id) {
         if (eventRepository.existsByCategory(getById(id))) {
-            throw new ConstraintForeignKeyException("The category is not empty");
+            throw new ConflictException("The category is not empty");
         }
 
         categoryRepository.deleteById(id);

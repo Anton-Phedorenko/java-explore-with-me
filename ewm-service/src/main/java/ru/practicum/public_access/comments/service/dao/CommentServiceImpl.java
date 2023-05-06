@@ -3,9 +3,8 @@ package ru.practicum.public_access.comments.service.dao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.admin_access.users.service.dal.UserService;
-import ru.practicum.exceptions.exception.InvalidRequestException;
+import ru.practicum.exceptions.exception.ConflictException;
 import ru.practicum.exceptions.exception.NotFoundException;
-import ru.practicum.exceptions.exception.TimeException;
 import ru.practicum.private_access.events.service.dal.EventService;
 import ru.practicum.public_access.comments.dto.CommentDtoInput;
 import ru.practicum.public_access.comments.dto.CommentDtoOutput;
@@ -40,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
             if (comment.getCreated().plusDays(1).isAfter(LocalDateTime.now())) {
                 comment.setDescription(commentDtoInput.getDescription());
             } else {
-                throw new TimeException(String.format("Comment with id=%s for more than 24 hours", id));
+                throw new ConflictException(String.format("Comment with id=%s for more than 24 hours", id));
             }
         }
         return CommentMapper.toCommentDto(comment);
@@ -69,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
     private Boolean isCreator(Comment comment, Long userId, Long eventId) {
         if (!comment.getUser().getId().equals(userId)
                 || !comment.getEvent().getId().equals(eventId)) {
-            throw new InvalidRequestException(String.format("User with id=%s did not leave a comment with id=%s " +
+            throw new ConflictException(String.format("User with id=%s did not leave a comment with id=%s " +
                             "under the event with id=%s",
                     userId, comment.getId(), eventId));
         }

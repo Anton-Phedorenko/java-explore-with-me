@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.admin_access.users.model.User;
 import ru.practicum.admin_access.users.service.dal.UserService;
-import ru.practicum.exceptions.exception.AccessException;
-import ru.practicum.exceptions.exception.DuplicateException;
-import ru.practicum.exceptions.exception.InvalidRequestException;
-import ru.practicum.exceptions.exception.StatusException;
+import ru.practicum.exceptions.exception.*;
 import ru.practicum.private_access.events.model.Event;
 import ru.practicum.private_access.events.service.dal.EventService;
 import ru.practicum.private_access.requests.Status.Status;
@@ -46,24 +43,24 @@ public class RequestServiceImpl implements RequestService {
     public RequestDtoOutput create(Long userId, Long eventId) {
         Event event = eventService.getById(eventId);
         if (!event.getState().equals(PUBLISHED)) {
-            throw new AccessException("Event is not published");
+            throw new ConflictException("Event is not published");
         }
 
         User user = userService.getById(userId);
         if (event.getUser().getId().equals(userId)) {
-            throw new InvalidRequestException(String
+            throw new ConflictException(String
                     .format("The user with id=%s is the initiator of the event with id=%s", userId, event.getId()));
         }
 
         repository.getByEventIdAndUserId(eventId, userId).ifPresent(request -> {
-            throw new DuplicateException("Request already exists");
+            throw new ConflictException("Request already exists");
         });
 
         List<Event> events = new ArrayList<>();
         events.add(event);
         List<Request> requests = repository.getPendingRequests(events);
         if (!requests.isEmpty() && requests.size() >= event.getParticipantLimit()) {
-            throw new AccessException("All seats are occupied for the event with id=" + eventId);
+            throw new ConflictException("All seats are occupied for the event with id=" + eventId);
         }
 
         Request request = new Request();
@@ -108,7 +105,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> requests = repository.getSelectedRequest(userId, eventId, requestDto.getRequestIds());
         for (Request request : requests) {
             if (!request.getStatus().equals(PENDING)) {
-                throw new StatusException(String.format("Request with id=%s has status is %s", request.getId(),
+                throw new ConflictException(String.format("Request with id=%s has status is %s", request.getId(),
                         request.getStatus()));
             }
         }

@@ -14,9 +14,7 @@ import ru.practicum.admin_access.users.model.User;
 import ru.practicum.admin_access.users.service.dal.UserService;
 import ru.practicum.client.StatsClient;
 import ru.practicum.dto.StatsDtoInput;
-import ru.practicum.exceptions.exception.DuplicateException;
-import ru.practicum.exceptions.exception.StatusException;
-import ru.practicum.exceptions.exception.TimeException;
+import ru.practicum.exceptions.exception.ConflictException;
 import ru.practicum.private_access.events.dto.*;
 import ru.practicum.private_access.events.location.service.dal.LocationService;
 import ru.practicum.private_access.events.mapper.EventMapper;
@@ -64,7 +62,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventDtoOutput create(Long userId, EventDtoInput eventDtoInput) {
         if (!eventDtoInput.getEventDate().isAfter(LocalDateTime.now())) {
-            throw new TimeException("Event date not in the future.");
+            throw new ConflictException("Event date not in the future.");
         }
         locationService.create(eventDtoInput.getLocation());
         return EventMapper.toEventDtoOutput(repository.save(EventMapper.toEvent(eventDtoInput,
@@ -78,14 +76,14 @@ public class EventServiceImpl implements EventService {
         Event event = getById(eventId);
         User user = userService.getById(userId);
         if (eventDtoInput.getEventDate() != null && !eventDtoInput.getEventDate().isAfter(LocalDateTime.now())) {
-            throw new TimeException("Event date not in the future.");
+            throw new ConflictException("Event date not in the future.");
         }
         if (eventDtoInput.getStateAction() != null
                 && eventDtoInput.getStateAction().equals(EventDtoInputUpdate.StateAction.SEND_TO_REVIEW)) {
             event.setState(State.PENDING);
         }
         if (eventDtoInput.getStateAction() == null && event.getState().equals(State.PUBLISHED)) {
-            throw new StatusException(String.format("Event has state %s", event.getState()));
+            throw new ConflictException(String.format("Event has state %s", event.getState()));
         }
         if (eventDtoInput.getLocation() != null) {
             locationService.create(eventDtoInput.getLocation());
@@ -139,13 +137,13 @@ public class EventServiceImpl implements EventService {
     public EventDtoOutputForAdmin updateByAdmin(Long id, EventDtoForAdminInput eventDto) {
         Event event = getById(id);
         if (eventDto.getEventDate() != null && !eventDto.getEventDate().isAfter(LocalDateTime.now())) {
-            throw new TimeException("Event date not in the future.");
+            throw new ConflictException("Event date not in the future.");
         }
         if (eventDto.getLocation() != null) {
             locationService.create(eventDto.getLocation());
         }
         if (!event.getState().equals(State.PENDING)) {
-            throw new StatusException(String.format("event with id=%s has status %s", id, event.getState()));
+            throw new ConflictException(String.format("event with id=%s has status %s", id, event.getState()));
         }
         if (eventDto.getCategory() == null) {
             return EventMapper.toEventDtoOutputForAdmin(updateEvent(event, EventMapper.toEventAdmin(eventDto,
@@ -357,7 +355,7 @@ public class EventServiceImpl implements EventService {
         if (newEvent.getState() != null) {
             if (event.getState().equals(State.PUBLISHED) && newEvent.getState().equals(State.PUBLISHED)
                     || event.getState().equals(State.CANCELED) && newEvent.getState().equals(State.CANCELED)) {
-                throw new DuplicateException(String.format("Status: %s already in use event with id=%s",
+                throw new ConflictException(String.format("Status: %s already in use event with id=%s",
                         newEvent.getState(), event.getId()));
             }
             event.setState(newEvent.getState());
