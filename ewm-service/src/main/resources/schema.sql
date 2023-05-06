@@ -77,3 +77,14 @@ CREATE TABLE IF NOT EXISTS requests
     CONSTRAINT fk_requests_to_users FOREIGN KEY (id_user) REFERENCES users (id),
     CONSTRAINT fk_requests_to_events FOREIGN KEY (id_event) REFERENCES events (id)
 );
+
+CREATE TABLE if NOT EXISTS comments
+(
+    id bigint generated always AS IDENTITY PRIMARY KEY,
+    id_user bigint,
+    id_event bigint,
+    description VARCHAR(7000),
+    created TIMESTAMP,
+    CONSTRAINT fk_comments_to_users FOREIGN KEY (id_user) REFERENCES users (id),
+    CONSTRAINT fk_comments_to_events FOREIGN KEY (id_event) REFERENCES events (id)
+);

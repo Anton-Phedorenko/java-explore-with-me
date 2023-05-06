@@ -72,8 +72,7 @@ public class HandlerException {
         return responseEntity;
     }
 
-    @ExceptionHandler(value = {StatusException.class, ConstraintForeignKeyException.class, AccessException.class,
-            TimeException.class, DuplicateException.class, InvalidRequestException.class,
+    @ExceptionHandler(value = {ConflictException.class,
             HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponse> totalConflictExc(RuntimeException ex) {
         ResponseEntity<ErrorResponse> responseEntity = new ResponseEntity<>(
@@ -85,5 +84,4 @@ public class HandlerException {
         log.info(String.valueOf(responseEntity));
         return responseEntity;
     }
-
 }

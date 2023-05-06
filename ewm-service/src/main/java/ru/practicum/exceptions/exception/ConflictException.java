@@ -1,8 +1,7 @@
 package ru.practicum.exceptions.exception;
 
-public class StatusException extends RuntimeException {
-
-    public StatusException(final String message) {
+public class ConflictException extends RuntimeException {
+    public ConflictException(String message) {
         super(message);
     }
 
